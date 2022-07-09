@@ -1,5 +1,7 @@
 # Тестовое задание "Проверка URL с использованием очередей" (Url Checker with Queues)
 
+!["Laravel Infinity URL Checker with GuzzleHttp & Queees on Redis"](https://user-images.githubusercontent.com/7511983/178118411-7792e2d6-07d8-4187-8c20-5cfda8bb35a9.jpg)
+
 # Ключевые особенности:
 1) Использование очередей
 2) Docker-compose + конфигурация Supervisor на заданное кол-во обработчиков очередей  
@@ -11,7 +13,8 @@
 
 - Docker-compose
 - PHP-8.1.8 FPM
-- Laravel 9
+- Laravel 9!
+
 - PostgreSQL 14
 - Redis
 - Пакеты (Laravel Breeze, Guzzle Http Client, TailwindCSS + DaisyUI, Laravel IDE Helper)
