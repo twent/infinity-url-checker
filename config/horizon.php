@@ -82,6 +82,7 @@ return [
 
     'waits' => [
         'redis:default' => 60,
+        'redis:url_checks' => 60,
     ],
 
     /*
@@ -148,7 +149,7 @@ return [
     |
     */
 
-    'memory_limit' => 128,
+    'memory_limit' => 512,
 
     /*
     |--------------------------------------------------------------------------
@@ -164,14 +165,15 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => ['url_checks', 'default'],
             'balance' => 'auto',
-            'maxProcesses' => 1,
+            'minProcesses' => 1,
+            'maxProcesses' => 2,
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
             'tries' => 10,
-            'timeout' => 60,
+            'timeout' => 600,
             'nice' => 0,
         ],
     ],
@@ -179,16 +181,22 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'memory' => 256,
-                'maxProcesses' => 8,
+                'queue' => ['url_checks', 'default'],
+                'balance' => 'auto',
+                'memory' => 512,
+                'minProcesses' => 1,
+                'maxProcesses' => 12,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 2,
+                'tries' => 10,
             ],
         ],
 
         'local' => [
             'supervisor-1' => [
-                'maxProcesses' => 4,
+                'queue' => ['url_checks', 'default'],
+                'maxProcesses' => 3,
+                'tries' => 10,
             ],
         ],
     ],

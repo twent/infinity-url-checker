@@ -15,11 +15,14 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     @auth
                         <x-nav-link :href="route('dashboard.home')" :active="request()->routeIs('dashboard.home')">
-                            Панель управления
+                            Ссылки
                         </x-nav-link>
 
                         <x-nav-link :href="route('dashboard.url-checks.index')" :active="request()->routeIs('dashboard.url-checks.index')">
                             Проверки
+                        </x-nav-link>
+                        <x-nav-link :href="route('horizon.index')" :active="request()->routeIs('horizon.index')">
+                            Мониторинг очередей
                         </x-nav-link>
                     @endauth
 
