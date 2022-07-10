@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
-//Route::get('/', [UrlController::class, 'index'])->name('home')->middleware('guest');
 Route::get('/', [UrlController::class, 'create'])->name('home')->middleware('guest');
 Route::post('/urls/store', [UrlController::class, 'store'])->name('urls.store')->middleware('guest');
 

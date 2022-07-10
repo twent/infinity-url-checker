@@ -29,7 +29,7 @@
                             <tr>
                                 <th>URL</th>
                                 <th>Время проверки</th>
-                                <th>Http-код ответа</th>
+                                <th>Ответ сервера</th>
                                 <th>Номер попытки</th>
                             </tr>
                             </thead>
@@ -39,12 +39,8 @@
                                         <td>{{ $urlCheck->url->url_address }}</td>
                                         <td>{{ $urlCheck->executed_at->diffForHumans() }}</td>
                                         <td>
-                                            <span class="p-1.5 rounded @if($urlCheck->success) bg-success @else bg-error @endif " >
-                                                @if($urlCheck->success)
-                                                    {{ $urlCheck->answer_http_code }}
-                                                @else
-                                                    {{ $urlCheck->error_message }}
-                                                @endif
+                                            <span class="p-1.5 rounded @if($urlCheck->is_success) bg-success @else bg-error @endif " >
+                                                {{ $urlCheck->answer_message }}
                                             </span>
                                         </td>
                                         <td>{{ $urlCheck->attempt_number }}</td>

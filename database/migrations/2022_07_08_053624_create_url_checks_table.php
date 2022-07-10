@@ -20,9 +20,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade'); // Связь со ссылкой
             $table->timestamp('executed_at'); // Дата, время выполнения
-            $table->boolean('success'); // Код ответа успешен?
-            $table->unsignedSmallInteger('answer_http_code')->nullable(); // Код ответа
-            $table->tinyText('error_message')->nullable();
+            $table->boolean('is_success'); // Код ответа успешен?
+            $table->tinyText('answer_message'); // Ответ
             $table->unsignedBigInteger('attempt_number'); // Номер попытки
             $table->timestamps();
         });
