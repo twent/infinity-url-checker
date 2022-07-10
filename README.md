@@ -23,7 +23,7 @@
 
 1) Клонировать данный репозиторий
 2) Выбрать `.env.dev.example`или `.env.prod.example` за основу
-3) `composer install --optimize-autoloader`
+3) `composer install --optimize-autoloader --ignore-platform-reqs`
 4) `php artisan key:generate`
 5) `yarn install`
 6) `yarn run build`
