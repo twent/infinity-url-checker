@@ -2,35 +2,35 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\UrlCheck
  *
  * @property int $id
  * @property int $url_id
- * @property \Illuminate\Support\Carbon $executed_at
- * @property bool $success
- * @property int|null $answer_http_code
- * @property string|null $error_message
+ * @property Carbon $executed_at
+ * @property bool $is_success
+ * @property string $answer_message
  * @property int $attempt_number
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Url $url
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck query()
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereAnswerHttpCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereAttemptNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereErrorMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereExecutedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereSuccess($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UrlCheck whereUrlId($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Url $url
+ * @method static Builder|UrlCheck newModelQuery()
+ * @method static Builder|UrlCheck newQuery()
+ * @method static Builder|UrlCheck query()
+ * @method static Builder|UrlCheck whereAnswerHttpCode($value)
+ * @method static Builder|UrlCheck whereAttemptNumber($value)
+ * @method static Builder|UrlCheck whereCreatedAt($value)
+ * @method static Builder|UrlCheck whereErrorMessage($value)
+ * @method static Builder|UrlCheck whereExecutedAt($value)
+ * @method static Builder|UrlCheck whereId($value)
+ * @method static Builder|UrlCheck whereSuccess($value)
+ * @method static Builder|UrlCheck whereUpdatedAt($value)
+ * @method static Builder|UrlCheck whereUrlId($value)
  * @mixin \Eloquent
  */
 
