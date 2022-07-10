@@ -2,20 +2,19 @@
 
 namespace App\Jobs;
 
-use App\Models\Url;
-use App\Models\UrlCheck;
-use Exception;
+use DateInterval, DateTimeInterface, Exception;
+use App\Models\{Url, UrlCheck};
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class CheckUrlJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected Url $url;
 
     /**
      * Количество попыток выполнения задания.
@@ -25,27 +24,36 @@ class CheckUrlJob implements ShouldQueue
     public int $tries = 10;
 
     /**
-     * Количество секунд ожидания перед повторной попыткой выполнения задания.
+     * Удалить задание, если экземпляр модели больше не существует
      *
-     * @var int
+     * @var bool
      */
-    public int $backoff = 60;
-
-    protected Url $url;
+    public bool $deleteWhenMissingModels = true;
 
     /**
-     * Create a new job instance.
+     * Получить теги, которые назначаются заданию.
+     *
+     * @return array
+     */
+    public function tags(): array
+    {
+        return ['Processing URL:'.$this->url->url_address];
+    }
+
+    /**
+     * Создание задания
      *
      * @return void
      */
     public function __construct(Url $url)
     {
+        $this->onQueue('url_checks');
         $this->url = $url;
         $this->tries = $url->fail_repeat_count;
     }
 
     /**
-     * Execute the job.
+     * Выполнение задания
      *
      */
     public function handle(): void
@@ -54,35 +62,16 @@ class CheckUrlJob implements ShouldQueue
             $response = Http::timeout(3)->get($this->url->url_address);
 
             if ($response->successful()) {
+                $this->updateUrl(true);
                 $delay = now()->addMinutes($this->url->frequency);
-                $this->url->attempts += 1;
-                $this->url->fails = 0;
 
-                UrlCheck::create([
-                    'url_id' => $this->url->id,
-                    'executed_at' => now(),
-                    'success' => $response->successful(),
-                    'answer_http_code' => $response->status(),
-                    'attempt_number' => $this->url->attempts
-                ]);
+                $this->storeUrlCheck($response->status(),true);
 
-                $this->url->save();
                 CheckUrlJob::dispatch($this->url)->delay($delay);
             }
 
             if ($response->failed()) {
-
-                if ($response->clientError()) {
-                    Log::debug(static::class . ": Http Ошибка клиента. URL: " . $this->url->url_address);
-                    $response->throw($response->status());
-                } else if ($response->serverError()) {
-                    Log::debug(static::class . ": Http Ошибка сервера. URL: " . $this->url->url_address);
-                    $response->throw($response->status());
-                } else {
-                    Log::debug(static::class . ": Превышен timout или другая ошибка. URL: " . $this->url->url_address);
-                    $response->throw("Timeout or Other");
-                }
-
+                $response->throw('Error');
             }
 
         } catch (Exception $e) {
@@ -92,34 +81,47 @@ class CheckUrlJob implements ShouldQueue
     }
 
     /**
-     * Job Fail Processing.
+     * Обработка ошибки задания
      *
      * @param Exception $e
      * @return void
      */
     public function failed(Exception $e): void
     {
-        $delay = now()->addMinutes(1);
-        $this->url->fails +=1;
-        $this->url->attempts += 1;
-
-        if ($this->url->fails > $this->url->fail_repeat_count) {
-            $this->delete();
-        } else {
-            Log::error(static::class . ": Ошибка. URL: " . $this->url->url_address . " Попытка: " . $this->url->attempts);
-
-            UrlCheck::create([
-                'url_id' => $this->url->id,
-                'executed_at' => now(),
-                'success' => false,
-                'error_message' => mb_strstr($e->getMessage(), ':', true),
-                'attempt_number' => $this->url->attempts
-            ]);
-
-            $this->url->save();
+        if ($this->url->fails < $this->url->fail_repeat_count) {
+            $this->updateUrl();
+            $delay = now()->addMinute();
+            $errorMessage = mb_strstr($e->getMessage(), ':', true);
+            $this->storeUrlCheck($errorMessage);
             CheckUrlJob::dispatch($this->url)->delay($delay);
+        } else {
+            $this->delete();
         }
 
+    }
+
+    /*
+     * Обновление связанной ссылки
+    */
+    private function updateUrl(bool $isSuccessful = false): void
+    {
+        $this->url->attempts += 1;
+        $isSuccessful ? $this->url->fails = 0 : $this->url->fails += 1;
+        $this->url->save();
+    }
+
+    /*
+     * Создание записи о проверке в БД
+    */
+    private function storeUrlCheck(string $message, bool $isSuccessful = false): void
+    {
+        UrlCheck::create([
+            'url_id' => $this->url->id,
+            'executed_at' => now(),
+            'is_success' => $isSuccessful,
+            'answer_message' => $message,
+            'attempt_number' => $this->url->attempts
+        ]);
     }
 
 }
