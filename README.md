@@ -17,7 +17,7 @@
 
 - PostgreSQL 14
 - Redis
-- Пакеты (Laravel Breeze, Guzzle Http Client, TailwindCSS + DaisyUI, Laravel IDE Helper)
+- Пакеты (Laravel Breeze, Laravel Horizon, Guzzle Http Client, TailwindCSS + DaisyUI, Laravel IDE Helper)
 
 ## Как развернуть
 
@@ -37,5 +37,6 @@
 14) Учётная запись по умолчанию:
     Email: `test@example.com`
     Пароль: `12345678`
+15) Мониторинг очередей - Laravel Horizon, доступен по адресу `http://localhost/queues`
 
 Автор: [twent](https://github.com/twent)
