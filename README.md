@@ -1,6 +1,6 @@
 # Тестовое задание "Проверка URL с использованием очередей" (Url Checker with Queues)
 
-!["Laravel Infinity URL Checker with GuzzleHttp & Queees on Redis"](https://user-images.githubusercontent.com/7511983/178118411-7792e2d6-07d8-4187-8c20-5cfda8bb35a9.jpg)
+![infinity-url-checker-results_cr](https://user-images.githubusercontent.com/7511983/178134731-92aec1a0-e9e7-4dfd-8159-94f4e16ad385.jpg)
 
 # Ключевые особенности:
 1) Использование очередей
