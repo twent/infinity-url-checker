@@ -12,9 +12,8 @@
 ## Стек:
 
 - Docker-compose
-- PHP-8.1.8 FPM
-- Laravel 9!
-
+- PHP-8.1 FPM
+- Laravel 9
 - PostgreSQL 14
 - Redis
 - Пакеты (Laravel Breeze, Laravel Horizon, Guzzle Http Client, TailwindCSS + DaisyUI, Laravel IDE Helper)
