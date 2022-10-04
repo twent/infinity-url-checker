@@ -59,7 +59,7 @@ class CheckUrlJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            $response = Http::timeout(3)->get($this->url->url_address);
+            $response = Http::timeout(3)->head($this->url->url_address);
 
             if ($response->successful()) {
                 $this->updateUrl(true);
